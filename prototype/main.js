@@ -13,44 +13,37 @@ function init() {
     renderer.setClearColor(0xFFFFFF)
     renderer.setSize(window.innerWidth, window.innerHeight)
 
-    var cubeGeometry = new THREE.BoxGeometry(TABLE_SIZE.w, TABLE_SIZE.h, TABLE_SIZE.d)
-    var texture = new THREE.TextureLoader().load('assets/tennis_court_grass.jpg')
-    var textureFace = new THREE.MeshLambertMaterial({})
-    textureFace.map = texture
-    console.log('textureface', textureFace)
-    var materials = [
-        new THREE.MeshLambertMaterial({ color: 0x005A00 }),
-        new THREE.MeshLambertMaterial({ color: 0x005A00 }),
-        textureFace,
-        new THREE.MeshLambertMaterial({ color: 0x005A00 }),
-        new THREE.MeshLambertMaterial({ color: 0x005A00 }),
-        new THREE.MeshLambertMaterial({ color: 0x005A00 }),
-    ]
-    cube = new THREE.Mesh(cubeGeometry, materials)
-    cube.position.set(0, 0, 0)
-    cube.castShadow = true
-    console.log(cube)
-    scene.add(cube)
-
-    tableLeg1 = new THREE.Mesh(new THREE.BoxGeometry(8, 30, 8), new THREE.MeshLambertMaterial({ color: 0x542a07 }))
-    tableLeg1.castShadow = true
-    tableLeg1.position.set(-50, -15, 20)
-    scene.add(tableLeg1)
-
-    tableLeg2 = new THREE.Mesh(new THREE.BoxGeometry(8, 30, 8), new THREE.MeshLambertMaterial({ color: 0x542a07 }))
-    tableLeg2.castShadow = true
-    tableLeg2.position.set(50, -15, 20)
-    scene.add(tableLeg2)
-
-    tableLeg3 = new THREE.Mesh(new THREE.BoxGeometry(8, 30, 8), new THREE.MeshLambertMaterial({ color: 0x542a07 }))
-    tableLeg3.castShadow = true
-    tableLeg3.position.set(50, -15, -20)
-    scene.add(tableLeg3)
-
-    tableLeg4 = new THREE.Mesh(new THREE.BoxGeometry(8, 30, 8), new THREE.MeshLambertMaterial({ color: 0x542a07 }))
-    tableLeg4.castShadow = true
-    tableLeg4.position.set(-50, -15, -20)
-    scene.add(tableLeg4)
+    var loader = new THREE.TextureLoader()
+    loader.load('assets/tennis_court_grass.jpg', function (texture) {
+        var cubeGeometry = new THREE.BoxGeometry(TABLE_SIZE.w, TABLE_SIZE.h, TABLE_SIZE.d)
+        var textureFace = new THREE.MeshLambertMaterial({})
+        textureFace.map = texture
+        console.log('textureface', textureFace)
+        var materials = [
+            new THREE.MeshLambertMaterial({ color: 0x005A00 }),
+            new THREE.MeshLambertMaterial({ color: 0x005A00 }),
+            textureFace,
+            new THREE.MeshLambertMaterial({ color: 0x005A00 }),
+            new THREE.MeshLambertMaterial({ color: 0x005A00 }),
+            new THREE.MeshLambertMaterial({ color: 0x005A00 }),
+        ]
+        cube = new THREE.Mesh(cubeGeometry, materials)
+        cube.position.set(0, 0, 0)
+        cube.castShadow = true
+        console.log(cube)
+        scene.add(cube)
+    })
+    var positions = [[-1, 1], [1, 1], [1, -1], [-1, -1]]
+    var tableLegs = new THREE.Group()
+    positions.forEach(position => {
+        var tableLeg = new THREE.Mesh(
+            new THREE.BoxGeometry(8, 30, 8),
+            new THREE.MeshLambertMaterial({ color: 0x542a07 }))
+        tableLeg.castShadow = true
+        tableLeg.position.set(TABLE_LEG_POS.x * position[0], TABLE_LEG_POS.y, TABLE_LEG_POS.z * position[1])
+        tableLegs.add(tableLeg)
+        scene.add(tableLeg)
+    })
 
     createBorder()
 
@@ -85,8 +78,13 @@ function render() {
 }
 
 function createBorder() {
-    var smaller = new THREE.Mesh(new THREE.BoxGeometry(120, 12, 60), new THREE.MeshLambertMaterial({ color: 0x542a07 }))
-    var bigger = new THREE.Mesh(new THREE.BoxGeometry(125, 12, 65), new THREE.MeshLambertMaterial({ color: 0x542a07 }))
+    var smaller = new THREE.Mesh(
+        new THREE.BoxGeometry(TABLE_SIZE.w, TABLE_SIZE.h + 4, TABLE_SIZE.d),
+        new THREE.MeshLambertMaterial({ color: 0x542a07 }))
+
+    var bigger = new THREE.Mesh(
+        new THREE.BoxGeometry(TABLE_SIZE.w + 5, TABLE_SIZE.h + 4, TABLE_SIZE.d + 5),
+        new THREE.MeshLambertMaterial({ color: 0x542a07 }))
 
     var biggerBSP = new ThreeBSP(bigger)
     var cubeBSP = new ThreeBSP(smaller)
