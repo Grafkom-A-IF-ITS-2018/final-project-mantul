@@ -20,12 +20,12 @@ function init() {
         textureFace.map = texture
         console.log('textureface', textureFace)
         var materials = [
-            new THREE.MeshLambertMaterial({ color: 0x005A00 }),
-            new THREE.MeshLambertMaterial({ color: 0x005A00 }),
+            new THREE.MeshLambertMaterial({ color: 0x565243 }),
+            new THREE.MeshLambertMaterial({ color: 0x565243 }),
             textureFace,
-            new THREE.MeshLambertMaterial({ color: 0x005A00 }),
-            new THREE.MeshLambertMaterial({ color: 0x005A00 }),
-            new THREE.MeshLambertMaterial({ color: 0x005A00 }),
+            new THREE.MeshLambertMaterial({ color: 0x565243 }),
+            new THREE.MeshLambertMaterial({ color: 0x565243 }),
+            new THREE.MeshLambertMaterial({ color: 0x565243 }),
         ]
         cube = new THREE.Mesh(cubeGeometry, materials)
         cube.position.set(0, 0, 0)
@@ -38,7 +38,7 @@ function init() {
     positions.forEach(position => {
         var tableLeg = new THREE.Mesh(
             new THREE.BoxGeometry(8, 30, 8),
-            new THREE.MeshLambertMaterial({ color: 0x542a07 }))
+            new THREE.MeshLambertMaterial({ color: 0x352421 }))
         tableLeg.castShadow = true
         tableLeg.position.set(TABLE_LEG_POS.x * position[0], TABLE_LEG_POS.y, TABLE_LEG_POS.z * position[1])
         tableLegs.add(tableLeg)
@@ -46,6 +46,7 @@ function init() {
     })
 
     createBorder()
+    createNaruto()
 
     var light = new THREE.AmbientLight(0xffffff, 0.2)
     scene.add(light)
@@ -73,17 +74,17 @@ function init() {
 }
 function render() {
     requestAnimationFrame(render)
-    // rotateField()
+    //rotateField()
     renderer.render(scene, camera)
 }
 
 function createBorder() {
     var smaller = new THREE.Mesh(
-        new THREE.BoxGeometry(TABLE_SIZE.w, TABLE_SIZE.h + 4, TABLE_SIZE.d),
+        new THREE.BoxGeometry(TABLE_SIZE.w, TABLE_SIZE.h, TABLE_SIZE.d),
         new THREE.MeshLambertMaterial({ color: 0x542a07 }))
 
     var bigger = new THREE.Mesh(
-        new THREE.BoxGeometry(TABLE_SIZE.w + 5, TABLE_SIZE.h + 4, TABLE_SIZE.d + 5),
+        new THREE.BoxGeometry(TABLE_SIZE.w + 5, TABLE_SIZE.h, TABLE_SIZE.d + 5),
         new THREE.MeshLambertMaterial({ color: 0x542a07 }))
 
     var biggerBSP = new ThreeBSP(bigger)
@@ -91,11 +92,85 @@ function createBorder() {
     var resultBSP = biggerBSP.subtract(cubeBSP)
     outer = resultBSP.toMesh()
     outer.position.set(0, 2, 0)
-    outer.material = new THREE.MeshLambertMaterial({ color: 0x005A00 })
+    outer.material = new THREE.MeshLambertMaterial({ color: 0x565243 })
     outer.geometry.computeFaceNormals()
     outer.geometry.computeVertexNormals()
     scene.add(outer)
     console.log(outer)
+}
+
+function createNaruto(){
+    var head_materials = [
+        new THREE.MeshLambertMaterial({
+            map: THREE.ImageUtils.loadTexture('assets/head_right.jpg')
+        }),
+        new THREE.MeshLambertMaterial({
+            map: THREE.ImageUtils.loadTexture('assets/head_left.jpg')
+        }),
+        new THREE.MeshLambertMaterial({
+            map: THREE.ImageUtils.loadTexture('assets/head_top.jpg')
+        }),
+        new THREE.MeshLambertMaterial({
+            map: THREE.ImageUtils.loadTexture('assets/head_bottom.jpg')
+        }),
+        new THREE.MeshLambertMaterial({
+            map: THREE.ImageUtils.loadTexture('assets/head_front.jpg')
+        }),
+        new THREE.MeshLambertMaterial({
+            map: THREE.ImageUtils.loadTexture('assets/head_back.jpg')
+        })
+    ];
+    head_materials = new THREE.Mesh( new THREE.BoxGeometry(15, 15, 15), head_materials);
+    head_materials.position.set(0, 30, -60)
+    scene.add(head_materials);
+
+    var body_materials = [
+        new THREE.MeshLambertMaterial({
+            map: THREE.ImageUtils.loadTexture('assets/body_right.jpg')
+        }),
+        new THREE.MeshLambertMaterial({
+            map: THREE.ImageUtils.loadTexture('assets/body_left.jpg')
+        }),
+        new THREE.MeshLambertMaterial({
+            map: THREE.ImageUtils.loadTexture('assets/body_top.jpg')
+        }),
+        new THREE.MeshLambertMaterial({
+            map: THREE.ImageUtils.loadTexture('assets/body_bottom.jpg')
+        }),
+        new THREE.MeshLambertMaterial({
+            map: THREE.ImageUtils.loadTexture('assets/body_front.jpg')
+        }),
+        new THREE.MeshLambertMaterial({
+            map: THREE.ImageUtils.loadTexture('assets/body_back.jpg')
+        })
+    ];
+    body_materials = new THREE.Mesh( new THREE.BoxGeometry(35, 25, 5), body_materials);
+    body_materials.position.set(0, 10, -60)
+    scene.add(body_materials);
+
+    var leg_materials = [
+        new THREE.MeshLambertMaterial({
+            map: THREE.ImageUtils.loadTexture('assets/leg_right.jpg')
+        }),
+        new THREE.MeshLambertMaterial({
+            map: THREE.ImageUtils.loadTexture('assets/leg_left.jpg')
+        }),
+        new THREE.MeshLambertMaterial({
+            map: THREE.ImageUtils.loadTexture('assets/leg_top.jpg')
+        }),
+        new THREE.MeshLambertMaterial({
+            map: THREE.ImageUtils.loadTexture('assets/leg_bottom.jpg')
+        }),
+        new THREE.MeshLambertMaterial({
+            map: THREE.ImageUtils.loadTexture('assets/leg_front.jpg')
+        }),
+        new THREE.MeshLambertMaterial({
+            map: THREE.ImageUtils.loadTexture('assets/leg_back.jpg')
+        })
+    ];
+    leg_materials = new THREE.Mesh( new THREE.BoxGeometry(15, 25, 5), leg_materials);
+    leg_materials.position.set(0, -15, -60)
+    scene.add(leg_materials);
 }
 
 function rotateField() {
@@ -103,8 +178,8 @@ function rotateField() {
         return;
     }
     var SPEED = 0.004
-    cube.rotation.x -= SPEED * 2;
-    // cube.rotation.y -= SPEED;
+    //dice.rotation.x -= SPEED * 2;
+    cube.rotation.y -= SPEED;
     // cube.rotation.z -= SPEED * 3;
 }
 window.onload = init
