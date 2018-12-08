@@ -9,16 +9,22 @@ function init() {
     scene = new THREE.Scene()
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000)
 
-    renderer = new THREE.WebGLRenderer()
+    renderer = new THREE.WebGLRenderer({ antialias: true })
+    renderer.shadowMapEnabled = true
     renderer.setClearColor(0xFFFFFF)
     renderer.setSize(window.innerWidth, window.innerHeight)
+
+    // var plane = new THREE.Mesh(new THREE.PlaneGeometry(300, 300), new THREE.MeshLambertMaterial({ color: 0x555555, side: THREE.DoubleSide }))
+    // plane.rotateX(-0.5 * Math.PI)
+    // plane.position.set(0, -35, 0)
+    // plane.receiveShadow = true
+    // scene.add(plane)
 
     var loader = new THREE.TextureLoader()
     loader.load('assets/tennis_court_grass.jpg', function (texture) {
         var cubeGeometry = new THREE.BoxGeometry(TABLE_SIZE.w, TABLE_SIZE.h, TABLE_SIZE.d)
         var textureFace = new THREE.MeshLambertMaterial({})
         textureFace.map = texture
-        console.log('textureface', textureFace)
         var materials = [
             new THREE.MeshLambertMaterial({ color: 0x565243 }),
             new THREE.MeshLambertMaterial({ color: 0x565243 }),
@@ -30,8 +36,10 @@ function init() {
         cube = new THREE.Mesh(cubeGeometry, materials)
         cube.position.set(0, 0, 0)
         cube.castShadow = true
-        console.log(cube)
+        cube.receiveShadow = true
         scene.add(cube)
+        // console.log('cube', cube)
+        // console.log(cube)
     })
     var positions = [[-1, 1], [1, 1], [1, -1], [-1, -1]]
     var tableLegs = new THREE.Group()
@@ -47,20 +55,23 @@ function init() {
 
     createBorder()
     createNaruto()
-
-    var light = new THREE.AmbientLight(0xffffff, 0.2)
+    createRaket(55, 22)
+    createRaket(-55, -22)
+    var light = new THREE.AmbientLight(0x111111, 0.2)
     scene.add(light)
 
     var dirLight = new THREE.DirectionalLight(0xffffff, 1.0)
     dirLight.color.setHSL(0.1, 1, 0.95)
     dirLight.position.set(-1, 1.75, 1)
     dirLight.position.multiplyScalar(30)
+    dirLight.castShadow = true
     scene.add(dirLight)
 
     var dirLight2 = new THREE.DirectionalLight(0xffffff, 1.0)
     dirLight2.color.setHSL(0.1, 1, 0.95)
-    dirLight2.position.set(1, -1.75, 1)
+    dirLight2.position.set(1, 1.75, 1)
     dirLight2.position.multiplyScalar(30)
+    dirLight2.castShadow = true
     scene.add(dirLight2)
 
     camera.position.x = 0
@@ -76,6 +87,39 @@ function render() {
     requestAnimationFrame(render)
     //rotateField()
     renderer.render(scene, camera)
+}
+
+function createRaket(posx, posz) {
+    var mtlLoader = new THREE.MTLLoader()
+    mtlLoader.load("assets/raket_red.mtl", function (materials) {
+        // console.log('mtl', materials)
+        materials.preload()
+        var objLoader = new THREE.OBJLoader()
+        objLoader.setMaterials(materials)
+
+        objLoader.load("assets/raket_red.obj", function (obj) {
+            obj.children.forEach(element => {
+                element.geometry.center()
+                // console.log('element', element)
+                element.geometry.computeBoundingBox()
+                // console.log('element befor', element.geometry.boundingBox)
+            });
+            obj.scale.x = 8
+            obj.scale.y = 10
+            obj.scale.z = 8
+            obj.children.forEach(element => {
+                element.geometry.computeFaceNormals()
+                element.geometry.computeVertexNormals()
+                element.geometry.computeBoundingBox()
+            });
+            obj.rotation.y = -0.5 * Math.PI
+            obj.position.y = 8
+            obj.position.z = posz
+            obj.position.x = posx
+            obj.castShadow = true
+            scene.add(obj)
+        })
+    })
 }
 
 function createBorder() {
@@ -99,7 +143,7 @@ function createBorder() {
     console.log(outer)
 }
 
-function createNaruto(){
+function createNaruto() {
     var head_materials = [
         new THREE.MeshLambertMaterial({
             map: THREE.ImageUtils.loadTexture('assets/head_right.jpg')
@@ -120,8 +164,9 @@ function createNaruto(){
             map: THREE.ImageUtils.loadTexture('assets/head_back.jpg')
         })
     ];
-    head_materials = new THREE.Mesh( new THREE.BoxGeometry(15, 15, 15), head_materials);
+    head_materials = new THREE.Mesh(new THREE.BoxGeometry(15, 15, 15), head_materials);
     head_materials.position.set(0, 30, -60)
+    head_materials.castShadow = true
     scene.add(head_materials);
 
     var body_materials = [
@@ -144,8 +189,9 @@ function createNaruto(){
             map: THREE.ImageUtils.loadTexture('assets/body_back.jpg')
         })
     ];
-    body_materials = new THREE.Mesh( new THREE.BoxGeometry(35, 25, 5), body_materials);
+    body_materials = new THREE.Mesh(new THREE.BoxGeometry(35, 25, 5), body_materials);
     body_materials.position.set(0, 10, -60)
+    body_materials.castShadow = true
     scene.add(body_materials);
 
     var leg_materials = [
@@ -168,8 +214,9 @@ function createNaruto(){
             map: THREE.ImageUtils.loadTexture('assets/leg_back.jpg')
         })
     ];
-    leg_materials = new THREE.Mesh( new THREE.BoxGeometry(15, 25, 5), leg_materials);
+    leg_materials = new THREE.Mesh(new THREE.BoxGeometry(15, 25, 5), leg_materials);
     leg_materials.position.set(0, -15, -60)
+    leg_materials.castShadow = true
     scene.add(leg_materials);
 }
 
