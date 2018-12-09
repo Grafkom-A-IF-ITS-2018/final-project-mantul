@@ -266,11 +266,14 @@ GameWorld.prototype.render = function () {
         this.scene.remove(player.racket)
         this.scene.add(player.racket)
     })
+    handle_racket()
     this.renderer.render(this.scene, this.camera)
 }
 
+var temp
+
 window.onload = function () {
-    let temp = new GameWorld(1)
+    temp = new GameWorld(1)
     temp.initWorld()
     temp.render()
     console.log(temp)
@@ -279,3 +282,61 @@ window.onload = function () {
     // console.log(a.racket == undefined)
     // console.log(a)
 }
+
+var pressed_key = {
+    'player_0_up' : false,
+    'player_0_down' : false,
+    'player_1_up' : false,
+    'player_1_down' : false
+}
+
+function handle_keydown(event) {
+    var key_code = event.which
+    if (key_code == 38) {
+        pressed_key.player_0_up = true
+    }
+    else if (key_code == 40) {
+        pressed_key.player_0_down = true
+    }
+    else if (key_code == 83) {
+        pressed_key.player_1_down = true
+    }
+    else if (key_code == 87) {
+        pressed_key.player_1_up = true
+    }
+}
+
+function handle_keyup(event) {
+    var key_code = event.which
+    if (key_code == 38) {
+        pressed_key.player_0_up = false
+    }
+    else if (key_code == 40) {
+        pressed_key.player_0_down = false
+    }
+    else if (key_code == 83) {
+        pressed_key.player_1_down = false
+    }
+    else if (key_code == 87) {
+        pressed_key.player_1_up = false
+    }
+}
+
+function handle_racket() {
+    var speed = 1
+    if (pressed_key.player_0_up == true) {
+        temp.players[0].racket.position.z -= speed
+    }
+    if (pressed_key.player_0_down == true) {
+        temp.players[0].racket.position.z += speed
+    }
+    if (pressed_key.player_1_up == true) {
+        temp.players[1].racket.position.z -= speed
+    }
+    if (pressed_key.player_1_down == true) {
+        temp.players[1].racket.position.z += speed
+    }
+}
+
+document.addEventListener("keydown", handle_keydown, false);
+document.addEventListener("keyup", handle_keyup, false)
