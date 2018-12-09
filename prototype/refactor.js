@@ -324,17 +324,17 @@ function handle_keyup(event) {
 
 function handle_racket() {
     var speed = 1
-    if (pressed_key.player_0_up == true && temp.players[0].racket.position.z >= -20) {
+    if (pressed_key.player_0_up == true && temp.players[0].racket.position.z >= -22) {
         temp.players[0].racket.position.z -= speed
         
     }
-    if (pressed_key.player_0_down == true && temp.players[0].racket.position.z <= 20) {
+    if (pressed_key.player_0_down == true && temp.players[0].racket.position.z <= 22) {
         temp.players[0].racket.position.z += speed
     }
-    if (pressed_key.player_1_up == true && temp.players[1].racket.position.z >= -20) {
+    if (pressed_key.player_1_up == true && temp.players[1].racket.position.z >= -22) {
         temp.players[1].racket.position.z -= speed
     }
-    if (pressed_key.player_1_down == true && temp.players[1].racket.position.z <= 20) {
+    if (pressed_key.player_1_down == true && temp.players[1].racket.position.z <= 22) {
         temp.players[1].racket.position.z += speed
     }
 }
