@@ -380,4 +380,7 @@ function balls() {
             temp.players[0].score += 1
         }
     }
+
+    //mindah kepala wasit
+    temp.referee.children[0].lookAt(temp.bola.position)
 }
