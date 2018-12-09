@@ -46,7 +46,6 @@ Player.prototype.createRaket = function () {
             obj.position.x = this.id * 55
             obj.castShadow = true
             this.racket = obj
-            // return obj
         })
     })
 }
@@ -69,10 +68,11 @@ function GameWorld(id) {
     this.mejaGroup = new THREE.Group()
     this.players = []
 
-    this.bola = new THREE.Mesh(new THREE.SphereGeometry(3, 32, 32), new THREE.MeshPhongMaterial({ color: 0x0000FF }))
+    this.bola = new THREE.Mesh(new THREE.SphereGeometry(2, 32, 32), new THREE.MeshPhongMaterial({ color: 0x0000FF }))
     this.bola.castShadow = true
     this.bola.position.set(30, 8, 20)
     this.scene.add(this.bola)
+    this.bolaVelocity = new THREE.Vector3()
 
     this.camera.lookAt(this.scene.position)
     document.getElementById('WebGL-output').appendChild(this.renderer.domElement)
@@ -244,12 +244,8 @@ GameWorld.prototype.createPlayers = function () {
     [1, -1].forEach(id => {
         let player = new Player(id)
         player.createRaket()
-        // .then(() => 
         this.scene.add(player.racket)
-        // )
-        // .then(() => 
         this.players.push(player)
-        // )
     })
 }
 
@@ -258,6 +254,10 @@ GameWorld.prototype.initWorld = function () {
     this.createLighting()
     this.createReferee()
     this.createPlayers()
+}
+
+GameWorld.prototype.animate = function () {
+
 }
 
 GameWorld.prototype.render = function () {
