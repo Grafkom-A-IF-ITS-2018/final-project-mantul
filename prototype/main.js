@@ -124,11 +124,11 @@ function createRaket(posx, posz) {
 
 function createBorder() {
     var smaller = new THREE.Mesh(
-        new THREE.BoxGeometry(TABLE_SIZE.w, TABLE_SIZE.h, TABLE_SIZE.d),
+        new THREE.BoxGeometry(TABLE_SIZE.w, TABLE_SIZE.h + 4, TABLE_SIZE.d),
         new THREE.MeshLambertMaterial({ color: 0x542a07 }))
 
     var bigger = new THREE.Mesh(
-        new THREE.BoxGeometry(TABLE_SIZE.w + 5, TABLE_SIZE.h, TABLE_SIZE.d + 5),
+        new THREE.BoxGeometry(TABLE_SIZE.w + 5, TABLE_SIZE.h + 4, TABLE_SIZE.d + 5),
         new THREE.MeshLambertMaterial({ color: 0x542a07 }))
 
     var biggerBSP = new ThreeBSP(bigger)
