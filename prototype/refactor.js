@@ -3,11 +3,62 @@
 const TABLE_SIZE = { w: 120, h: 8, d: 60 }
 const TABLE_LEG_POS = { x: 50, y: -15, z: 20 }
 
+function promisifyLoader(loader, onProgress) {
+    function promiseLoader(url) {
+        return new Promise((resolve, reject) => {
+            loader.load(url, resolve, onProgress, reject);
+        })
+    }
+    return {
+        originalLoader: loader,
+        load: promiseLoader,
+    }
+}
+
+function Player(id) {
+    this.id = id
+    this.score = 0
+    this.racket = undefined
+}
+
+Player.prototype.createRaket = function () {
+    let mtlLoader = new THREE.MTLLoader()
+    mtlLoader.load('assets/raket_red.mtl', materials => {
+        materials.preload()
+        let objLoader = new THREE.OBJLoader()
+        objLoader.setMaterials(materials)
+        objLoader.load('assets/raket_red.obj', obj => {
+            obj.children.forEach(element => {
+                element.geometry.center()
+                element.geometry.computeBoundingBox()
+            })
+            obj.scale.x = 8
+            obj.scale.y = 10
+            obj.scale.z = 8
+            obj.children.forEach(element => {
+                element.geometry.computeFaceNormals()
+                element.geometry.computeVertexNormals()
+                element.geometry.computeBoundingBox()
+            })
+            obj.rotation.y = -0.5 * Math.PI
+            obj.position.y = 8
+            obj.position.z = 0
+            obj.position.x = this.id * 55
+            obj.castShadow = true
+            this.racket = obj
+            // return obj
+        })
+    })
+}
+
 function GameWorld(id) {
     this.id = id
     this.scene = new THREE.Scene()
+
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000)
-    this.mejaGroup = new THREE.Group()
+    this.camera.position.x = 0
+    this.camera.position.y = 60
+    this.camera.position.z = 100
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true })
     this.renderer.shadowMap.enabled = true
@@ -15,10 +66,14 @@ function GameWorld(id) {
     this.renderer.setSize(window.innerWidth, window.innerHeight)
 
     this.referee = new THREE.Group()
+    this.mejaGroup = new THREE.Group()
+    this.players = []
 
-    this.camera.position.x = 0
-    this.camera.position.y = 60
-    this.camera.position.z = 100
+    this.bola = new THREE.Mesh(new THREE.SphereGeometry(3, 32, 32), new THREE.MeshPhongMaterial({ color: 0x0000FF }))
+    this.bola.castShadow = true
+    this.bola.position.set(30, 8, 20)
+    this.scene.add(this.bola)
+
     this.camera.lookAt(this.scene.position)
     document.getElementById('WebGL-output').appendChild(this.renderer.domElement)
 }
@@ -45,7 +100,7 @@ GameWorld.prototype.createLighting = function () {
 GameWorld.prototype.createSetMeja = function () {
     // buat bagian meja utama (ada map lapangan)
     let loader = new THREE.TextureLoader()
-    loader.load('assets/tennis_court_grass.jpg', (function (texture) {
+    loader.load('assets/tennis_court_grass.jpg', (texture) => {
         let mainMejaGeom = new THREE.BoxGeometry(TABLE_SIZE.w, TABLE_SIZE.h, TABLE_SIZE.d)
         let textureFace = new THREE.MeshLambertMaterial({})
         textureFace.map = texture
@@ -63,7 +118,7 @@ GameWorld.prototype.createSetMeja = function () {
         meja.receiveShadow = true
         meja.name = 'mejaUtama'
         this.mejaGroup.add(meja)
-    }).bind(this))
+    })
 
     // buat tepian meja
     let smaller = new THREE.Mesh(
@@ -125,6 +180,7 @@ GameWorld.prototype.createReferee = function () {
     refHead.name = 'refHead'
     refHead.position.set(0, 30, -60)
     refHead.castShadow = true
+    refHead.lookAt(this.bola.position)
     this.referee.add(refHead)
 
     //badan wasit
@@ -184,14 +240,32 @@ GameWorld.prototype.createReferee = function () {
     this.scene.add(this.referee)
 }
 
+GameWorld.prototype.createPlayers = function () {
+    [1, -1].forEach(id => {
+        let player = new Player(id)
+        player.createRaket()
+        // .then(() => 
+        this.scene.add(player.racket)
+        // )
+        // .then(() => 
+        this.players.push(player)
+        // )
+    })
+}
+
 GameWorld.prototype.initWorld = function () {
     this.createSetMeja()
     this.createLighting()
     this.createReferee()
+    this.createPlayers()
 }
 
 GameWorld.prototype.render = function () {
     requestAnimationFrame(this.render.bind(this))
+    this.players.forEach(player => {
+        this.scene.remove(player.racket)
+        this.scene.add(player.racket)
+    })
     this.renderer.render(this.scene, this.camera)
 }
 
@@ -200,4 +274,8 @@ window.onload = function () {
     temp.initWorld()
     temp.render()
     console.log(temp)
+    // let a = new Player(-1)
+    // a.createRaket()
+    // console.log(a.racket == undefined)
+    // console.log(a)
 }
