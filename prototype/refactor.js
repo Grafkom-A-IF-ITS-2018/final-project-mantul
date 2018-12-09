@@ -69,10 +69,11 @@ function GameWorld(id) {
     this.players = []
 
     this.bola = new THREE.Mesh(new THREE.SphereGeometry(2, 32, 32), new THREE.MeshPhongMaterial({ color: 0x0000FF }))
-    this.bola.castShadow = true
-    this.bola.position.set(30, 8, 20)
+    this.bola.castShadow = false
+    this.bola.position.set(0, 6, 0)
     this.scene.add(this.bola)
     this.bolaVelocity = new THREE.Vector3()
+    this.restart = true
 
     this.camera.lookAt(this.scene.position)
     document.getElementById('WebGL-output').appendChild(this.renderer.domElement)
@@ -266,6 +267,7 @@ GameWorld.prototype.render = function () {
         this.scene.remove(player.racket)
         this.scene.add(player.racket)
     })
+    balls()
     handle_racket()
     this.renderer.render(this.scene, this.camera)
 }
@@ -341,3 +343,41 @@ function handle_racket() {
 
 document.addEventListener("keydown", handle_keydown, false);
 document.addEventListener("keyup", handle_keyup, false)
+
+function balls() {
+    if (temp.restart == true) {
+        var initial_ball_angle = (((Math.random()-0.5)*2)*360)*(Math.PI/180)
+        temp.bolaVelocity.x = Math.cos(initial_ball_angle)
+        temp.bolaVelocity.z = Math.sin(initial_ball_angle)
+        temp.bola.position.x = 0
+        temp.bola.position.z = 0
+        temp.restart = false
+    }
+    temp.bola.position.x += temp.bolaVelocity.x
+    temp.bola.position.z += temp.bolaVelocity.z
+    
+    //cek apakah bola nabrak tepi, kalau iya pantulkan
+    if (temp.bola.position.z >= 25 || temp.bola.position.z <= -25) {
+        temp.bolaVelocity.z *= -1
+    }
+
+    //cek gol dan raket
+    if (temp.bola.position.x >= 50) {
+        if (temp.bola.position.z >= temp.players[0].racket.position.z-10 && temp.bola.position.z <= temp.players[0].racket.position.z+10) {
+            temp.bolaVelocity.x *= -1.05
+        }
+        else {
+            temp.restart = true
+        temp.players[1].score += 1
+        }
+    }
+    else if (temp.bola.position.x <= -50) {
+        if (temp.bola.position.z >= temp.players[1].racket.position.z-10 && temp.bola.position.z <= temp.players[1].racket.position.z+10) {
+            temp.bolaVelocity.x *= -1.05
+        }
+        else {
+            temp.restart = true
+            temp.players[0].score += 1
+        }
+    }
+}
