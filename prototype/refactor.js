@@ -368,7 +368,7 @@ function balls() {
         }
         else {
             temp.restart = true
-        temp.players[1].score += 1
+            temp.players[1].score += 1
         }
     }
     else if (temp.bola.position.x <= -50) {
