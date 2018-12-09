@@ -65,6 +65,7 @@ function GameWorld(id) {
     this.renderer.setSize(window.innerWidth, window.innerHeight)
 
     this.referee = new THREE.Group()
+    this.skyBox = new THREE.Group()
     this.mejaGroup = new THREE.Group()
     this.players = []
 
@@ -241,6 +242,34 @@ GameWorld.prototype.createReferee = function () {
     this.scene.add(this.referee)
 }
 
+GameWorld.prototype.createSkyBox = function () {
+    let skyBoxMaterials = [
+        new THREE.MeshLambertMaterial({
+            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/posx.jpg'), side: THREE.DoubleSide
+        }),
+        new THREE.MeshLambertMaterial({
+            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/negx.jpg'), side: THREE.DoubleSide
+        }),
+        new THREE.MeshLambertMaterial({
+            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/posy.jpg'), side: THREE.DoubleSide
+        }),
+        new THREE.MeshLambertMaterial({
+            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/negy.jpg'), side: THREE.DoubleSide
+        }),
+        new THREE.MeshLambertMaterial({
+            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/posz.jpg'),side: THREE.DoubleSide
+        }),
+        new THREE.MeshLambertMaterial({
+            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/negz.jpg'), side: THREE.DoubleSide
+        })
+    ]
+    let skyBoxMaterial = new THREE.Mesh(new THREE.BoxGeometry(300, 300, 300), skyBoxMaterials)
+    skyBoxMaterial.position.set(0, 120, 0)
+    skyBoxMaterial.name = 'skyBoxMaterial'
+    this.skyBox.add(skyBoxMaterial)
+    this.scene.add(this.skyBox)
+}
+
 GameWorld.prototype.createPlayers = function () {
     [1, -1].forEach(id => {
         let player = new Player(id)
@@ -253,6 +282,7 @@ GameWorld.prototype.createPlayers = function () {
 GameWorld.prototype.initWorld = function () {
     this.createSetMeja()
     this.createLighting()
+    this.createSkyBox()
     this.createReferee()
     this.createPlayers()
 }
