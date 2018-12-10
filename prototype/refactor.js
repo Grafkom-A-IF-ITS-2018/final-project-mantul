@@ -501,6 +501,9 @@ function handle_env(status) {
 document.addEventListener("keydown", handle_keydown, false);
 document.addEventListener("keyup", handle_keyup, false)
 
+var bounce=new Audio('assets/sound/Ping_Pong_Ball_Hit.mp3');
+var buzz=new Audio('assets/sound/buzz.mp3');
+
 function balls() {
     if (temp.restart == true) {
         var initial_ball_angle = (((Math.random() - 0.5) * 2) * 360) * (Math.PI / 180)
@@ -522,8 +525,14 @@ function balls() {
     if (temp.bola.position.x >= 50) {
         if (temp.bola.position.z >= temp.players[0].racket.position.z - 10 && temp.bola.position.z <= temp.players[0].racket.position.z + 10) {
             temp.bolaVelocity.x *= -1.05
+            bounce.pause();
+            bounce.currentTime = 0;
+            bounce.play();
         }
         else {
+            buzz.pause();
+            buzz.currentTime = 0;
+            buzz.play();
             temp.restart = true
             temp.players[1].score += 1
             temp.players[1].setScoreMesh(temp.scene)
@@ -532,8 +541,14 @@ function balls() {
     else if (temp.bola.position.x <= -50) {
         if (temp.bola.position.z >= temp.players[1].racket.position.z - 10 && temp.bola.position.z <= temp.players[1].racket.position.z + 10) {
             temp.bolaVelocity.x *= -1.05
+            bounce.pause();
+            bounce.currentTime = 0;
+            bounce.play();
         }
         else {
+            buzz.pause();
+            buzz.currentTime = 0;
+            buzz.play();
             temp.restart = true
             temp.players[0].score += 1
             temp.players[0].setScoreMesh(temp.scene)
