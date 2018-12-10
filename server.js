@@ -14,15 +14,15 @@ var score = {
   'left': 0
 }
 
-app.get('*', function(req, res){
+app.get('*', function (req, res) {
   var q = url.parse(req.url, true)
   var filename = '.' + q.pathname
   fs.readFile(filename, function (err, data) {
     if (err) {
-      res.writeHead(404, {'Content-Type': 'text/html'})
+      res.writeHead(404, { 'Content-Type': 'text/html' })
       return res.end('404 Not Found')
     }
-    res.writeHead(200, {'Content-Type': 'text/html'})
+    res.writeHead(200, { 'Content-Type': 'text/html' })
     res.write(data)
     return res.end()
   })
@@ -30,7 +30,7 @@ app.get('*', function(req, res){
 
 http.listen(7777, '0.0.0.0')
 
-io.on('connection', function(socket) {
+io.on('connection', function (socket) {
   console.log('connected')
   handle_socket(socket)
 })
@@ -52,33 +52,35 @@ function handle_socket(socket) {
   }
 
   if (user.right != 0 && user.left != 0) {
-    io.emit('start', true)
+    setTimeout(function () {
+      io.emit('start', true)
+    }, 3000)
   }
 
-  socket.on('disconnect', function() {
+  socket.on('disconnect', function () {
     user[userid] = 0
     console.log(userid + ' disconnect')
     return
   })
 
-  socket.on('who am i', function(data) {
+  socket.on('who am i', function (data) {
     socket.emit('you are', userid)
   })
 
-  socket.on('ball', function(data) {
+  socket.on('ball', function (data) {
     io.emit('ball', data)
   })
 
-  socket.on('score', function(data) {
+  socket.on('score', function (data) {
     score[data] += 1
     io.emit('score', score)
   })
 
-  socket.on('keydown', function(data) {
+  socket.on('keydown', function (data) {
     handle_key(userid, data, 'keydown')
   })
 
-  socket.on('keyup', function(data) {
+  socket.on('keyup', function (data) {
     handle_key(userid, data, 'keyup')
   })
 }

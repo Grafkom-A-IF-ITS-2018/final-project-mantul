@@ -6,14 +6,6 @@ const TABLE_LEG_POS = { x: 50, y: -15, z: 20 }
 var start = false
 var who_am_i = null
 var socket = io()
-socket.emit('who am i', 'ulol')
-socket.on('you are', function(data) {
-    who_am_i = data
-})
-
-socket.on('start', function(data) {
-    start = true
-})
 
 function promisifyLoader(loader, onProgress) {
     function promiseLoader(url) {
@@ -54,8 +46,15 @@ Player.prototype.setScoreMesh = function (scene) {
         bevelEnabled: false,
     })
     let scoreMesh = new THREE.Mesh(textGeom, material)
-    scoreMesh.position.x = this.id * 55
+    scoreMesh.position.x = this.id * 30
     scoreMesh.position.y = 30
+    scoreMesh.position.z = 40
+    if (who_am_i == 'right') {
+        scoreMesh.rotateY(0.5 * Math.PI)
+    }
+    else {
+        scoreMesh.rotateY(-0.5 * Math.PI)
+    }
     try {
         scene.remove(this.scoreMesh)
     } catch (error) {
@@ -90,6 +89,7 @@ Player.prototype.createRaket = function (callback) {
             obj.position.x = this.id * 55
             obj.castShadow = true
             this.racket = obj
+            this.racket.children[0].material.shininess = 10
             callback(this.racket)
         })
     })
@@ -359,6 +359,24 @@ window.onload = function () {
     temp = new GameWorld(1)
     temp.initWorld()
     temp.render()
+    socket.emit('who am i', 'ulol')
+    socket.on('you are', function (data) {
+        who_am_i = data
+    })
+
+    socket.on('start', function (data) {
+        start = true
+        if (who_am_i == 'right') {
+            temp.camera.position.set(120, 60, 0)
+            temp.camera.lookAt(temp.scene.position)
+        }
+        else {
+            temp.camera.position.set(-120, 60, 0)
+            temp.camera.lookAt(temp.scene.position)
+        }
+        document.getElementById('loading').style.display = 'none'
+        document.getElementById('WebGL-output').style.display = ''
+    })
     console.log(temp)
     // let a = new Player(-1)
     // a.createRaket()
@@ -388,7 +406,7 @@ function handle_keyup(event) {
     }
 }
 
-socket.on('keydown', function(data) {
+socket.on('keydown', function (data) {
     var player_id = data.player_side
     var key_code = data.key_code
     if (player_id == 'right') {
@@ -409,7 +427,7 @@ socket.on('keydown', function(data) {
     }
 })
 
-socket.on('keyup', function(data) {
+socket.on('keyup', function (data) {
     var player_id = data.player_side
     var key_code = data.key_code
     if (player_id == 'right') {
@@ -516,24 +534,24 @@ function handle_env(status) {
 
 function balls() {
     if (start == true) {
-        if (who_am_i == 'right'){
+        if (who_am_i == 'right') {
             if (temp.restart == true) {
-                var initial_ball_angle = (((Math.random()-0.5)*2)*360)*(Math.PI/180)
+                var initial_ball_angle = (((Math.random() - 0.5) * 2) * 360) * (Math.PI / 180)
                 temp.bolaVelocity.x = Math.cos(initial_ball_angle)
                 temp.bolaVelocity.z = Math.sin(initial_ball_angle)
                 temp.bola.position.x = 0
                 temp.bola.position.z = 0
                 temp.restart = false
             }
-            
+
             //cek apakah bola nabrak tepi, kalau iya pantulkan
             if (temp.bola.position.z >= 25 || temp.bola.position.z <= -25) {
                 temp.bolaVelocity.z *= -1
             }
-    
+
             //cek gol dan raket
             if (temp.bola.position.x >= 50) {
-                if (temp.bola.position.z >= temp.players[0].racket.position.z-10 && temp.bola.position.z <= temp.players[0].racket.position.z+10) {
+                if (temp.bola.position.z >= temp.players[0].racket.position.z - 10 && temp.bola.position.z <= temp.players[0].racket.position.z + 10) {
                     temp.bolaVelocity.x *= -1.05
                 }
                 else {
@@ -542,13 +560,13 @@ function balls() {
                 }
             }
             else if (temp.bola.position.x <= -50) {
-                if (temp.bola.position.z >= temp.players[1].racket.position.z-10 && temp.bola.position.z <= temp.players[1].racket.position.z+10) {
+                if (temp.bola.position.z >= temp.players[1].racket.position.z - 10 && temp.bola.position.z <= temp.players[1].racket.position.z + 10) {
                     temp.bolaVelocity.x *= -1.05
                 }
                 else {
                     temp.restart = true
                     socket.emit('score', 'right')
-                    
+
                 }
             }
             data = {
@@ -560,13 +578,13 @@ function balls() {
     }
 }
 
-socket.on('ball', function(data) {
+socket.on('ball', function (data) {
     temp.bola.position.x = data.x
     temp.bola.position.z = data.z
     temp.referee.children[0].lookAt(temp.bola.position)
 })
 
-socket.on('score', function(data) {
+socket.on('score', function (data) {
     temp.players[0].score = data.right
     temp.players[1].score = data.left
     temp.players[0].setScoreMesh(temp.scene)

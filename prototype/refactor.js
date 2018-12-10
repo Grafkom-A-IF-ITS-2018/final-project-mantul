@@ -78,6 +78,7 @@ Player.prototype.createRaket = function (callback) {
             obj.position.x = this.id * 55
             obj.castShadow = true
             this.racket = obj
+            this.racket.children[0].material.shininess = 10
             callback(this.racket)
         })
     })
@@ -450,7 +451,7 @@ function handle_env(status) {
             })
         ]
     }
-    else if(status==2) {
+    else if (status == 2) {
         skyBoxMaterials2 = [
             new THREE.MeshLambertMaterial({
                 map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament2/posx.jpg'), side: THREE.DoubleSide
@@ -501,8 +502,8 @@ function handle_env(status) {
 document.addEventListener("keydown", handle_keydown, false);
 document.addEventListener("keyup", handle_keyup, false)
 
-var bounce=new Audio('assets/sound/Ping_Pong_Ball_Hit.mp3');
-var buzz=new Audio('assets/sound/buzz.mp3');
+var bounce = new Audio('assets/sound/Ping_Pong_Ball_Hit.mp3');
+var buzz = new Audio('assets/sound/buzz.mp3');
 
 function balls() {
     if (temp.restart == true) {
