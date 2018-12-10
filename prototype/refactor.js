@@ -297,6 +297,7 @@ GameWorld.prototype.render = function () {
     requestAnimationFrame(this.render.bind(this))
     balls()
     handle_racket()
+    handle_env_status()
     this.renderer.render(this.scene, this.camera)
 }
 
@@ -317,7 +318,8 @@ var pressed_key = {
     'player_0_up': false,
     'player_0_down': false,
     'player_1_up': false,
-    'player_1_down': false
+    'player_1_down': false,
+    'change_env': false
 }
 
 function handle_keydown(event) {
@@ -333,6 +335,9 @@ function handle_keydown(event) {
     }
     else if (key_code == 87) {
         pressed_key.player_1_up = true
+    }
+    else if (key_code == 32) {
+        pressed_key.change_env = true
     }
 }
 
@@ -352,11 +357,12 @@ function handle_keyup(event) {
     }
 }
 
+var env_status = 1
+
 function handle_racket() {
     var speed = 1
     if (pressed_key.player_0_up == true && temp.players[0].racket.position.z >= -22) {
         temp.players[0].racket.position.z -= speed
-
     }
     if (pressed_key.player_0_down == true && temp.players[0].racket.position.z <= 22) {
         temp.players[0].racket.position.z += speed
@@ -367,6 +373,69 @@ function handle_racket() {
     if (pressed_key.player_1_down == true && temp.players[1].racket.position.z <= 22) {
         temp.players[1].racket.position.z += speed
     }
+}
+
+function handle_env_status(){
+    if (pressed_key.change_env == true) {
+        if(env_status==1){
+            env_status=2
+        }
+        else{
+            env_status=1
+        }
+        handle_env(env_status)
+        pressed_key.change_env = false
+    }
+}
+
+function handle_env(status){
+    let skyBoxMaterials2
+    if (status==1) {
+        skyBoxMaterials2 = [
+            new THREE.MeshLambertMaterial({
+                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/posx.jpg'), side: THREE.DoubleSide
+            }),
+            new THREE.MeshLambertMaterial({
+                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/negx.jpg'), side: THREE.DoubleSide
+            }),
+            new THREE.MeshLambertMaterial({
+                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/posy.jpg'), side: THREE.DoubleSide
+            }),
+            new THREE.MeshLambertMaterial({
+                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/negy.jpg'), side: THREE.DoubleSide
+            }),
+            new THREE.MeshLambertMaterial({
+                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/posz.jpg'), side: THREE.DoubleSide
+            }),
+            new THREE.MeshLambertMaterial({
+                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/negz.jpg'), side: THREE.DoubleSide
+            })
+        ]
+    }
+    else {
+        skyBoxMaterials2 = [
+            new THREE.MeshLambertMaterial({
+                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament2/posx.jpg'), side: THREE.DoubleSide
+            }),
+            new THREE.MeshLambertMaterial({
+                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament2/negx.jpg'), side: THREE.DoubleSide
+            }),
+            new THREE.MeshLambertMaterial({
+                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament2/posy.jpg'), side: THREE.DoubleSide
+            }),
+            new THREE.MeshLambertMaterial({
+                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament2/negy.jpg'), side: THREE.DoubleSide
+            }),
+            new THREE.MeshLambertMaterial({
+                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament2/posz.jpg'), side: THREE.DoubleSide
+            }),
+            new THREE.MeshLambertMaterial({
+                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament2/negz.jpg'), side: THREE.DoubleSide
+            })
+        ]
+    }
+    temp.skyBox.children[0] = new THREE.Mesh(new THREE.BoxGeometry(300, 300, 300), skyBoxMaterials2)
+    temp.skyBox.children[0].position.set(0, 120, 0)
 }
 
 document.addEventListener("keydown", handle_keydown, false);
