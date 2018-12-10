@@ -91,7 +91,7 @@ function GameWorld(id) {
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000)
     this.camera.position.x = 0
     this.camera.position.y = 60
-    this.camera.position.z = 100
+    this.camera.position.z = 130
 
     this.renderer = new THREE.WebGLRenderer({ antialias: true })
     this.renderer.shadowMap.enabled = true
@@ -132,12 +132,9 @@ GameWorld.prototype.createLighting = function () {
     dirLight2.castShadow = true
     this.scene.add(dirLight2)
 
-    let dirLight3 = new THREE.DirectionalLight(0xffffff, 0.4)
-    dirLight3.color.setHSL(0.1, 1, 0.95)
-    dirLight3.position.set(0, 0, 1)
-    dirLight3.position.multiplyScalar(30)
-    dirLight3.castShadow = true
-    this.scene.add(dirLight3)
+    let poinlight = new THREE.PointLight(0xffffff, 0.8, 600, 2)
+    poinlight.position.set(0, 0, 0)
+    this.scene.add(poinlight)
 }
 
 GameWorld.prototype.createSetMeja = function () {
