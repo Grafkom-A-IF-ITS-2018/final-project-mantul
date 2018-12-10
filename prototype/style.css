@@ -36,6 +36,11 @@ body {
   box-shadow: 0px 5px 0px 0px #c6030a;
 }
 
+.orange {
+  background-color: #F36A04;
+  box-shadow: 0px 5px 0px 0px #D95F03;
+}
+
 img {
   padding-top: 50px;
   max-width: 30%;
