@@ -21,7 +21,7 @@ function Player(id) {
     this.racket = undefined
 }
 
-Player.prototype.createRaket = function () {
+Player.prototype.createRaket = function (callback) {
     let mtlLoader = new THREE.MTLLoader()
     mtlLoader.load('assets/raket_red.mtl', materials => {
         materials.preload()
@@ -46,6 +46,7 @@ Player.prototype.createRaket = function () {
             obj.position.x = this.id * 55
             obj.castShadow = true
             this.racket = obj
+            callback(this.racket)
         })
     })
 }
@@ -257,7 +258,7 @@ GameWorld.prototype.createSkyBox = function () {
             map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/negy.jpg'), side: THREE.DoubleSide
         }),
         new THREE.MeshLambertMaterial({
-            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/posz.jpg'),side: THREE.DoubleSide
+            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/posz.jpg'), side: THREE.DoubleSide
         }),
         new THREE.MeshLambertMaterial({
             map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/negz.jpg'), side: THREE.DoubleSide
@@ -273,8 +274,9 @@ GameWorld.prototype.createSkyBox = function () {
 GameWorld.prototype.createPlayers = function () {
     [1, -1].forEach(id => {
         let player = new Player(id)
-        player.createRaket()
-        this.scene.add(player.racket)
+        player.createRaket((racket) => {
+            this.scene.add(racket)
+        })
         this.players.push(player)
     })
 }
@@ -293,10 +295,6 @@ GameWorld.prototype.animate = function () {
 
 GameWorld.prototype.render = function () {
     requestAnimationFrame(this.render.bind(this))
-    this.players.forEach(player => {
-        this.scene.remove(player.racket)
-        this.scene.add(player.racket)
-    })
     balls()
     handle_racket()
     this.renderer.render(this.scene, this.camera)
@@ -316,10 +314,10 @@ window.onload = function () {
 }
 
 var pressed_key = {
-    'player_0_up' : false,
-    'player_0_down' : false,
-    'player_1_up' : false,
-    'player_1_down' : false
+    'player_0_up': false,
+    'player_0_down': false,
+    'player_1_up': false,
+    'player_1_down': false
 }
 
 function handle_keydown(event) {
@@ -358,7 +356,7 @@ function handle_racket() {
     var speed = 1
     if (pressed_key.player_0_up == true && temp.players[0].racket.position.z >= -22) {
         temp.players[0].racket.position.z -= speed
-        
+
     }
     if (pressed_key.player_0_down == true && temp.players[0].racket.position.z <= 22) {
         temp.players[0].racket.position.z += speed
@@ -376,7 +374,7 @@ document.addEventListener("keyup", handle_keyup, false)
 
 function balls() {
     if (temp.restart == true) {
-        var initial_ball_angle = (((Math.random()-0.5)*2)*360)*(Math.PI/180)
+        var initial_ball_angle = (((Math.random() - 0.5) * 2) * 360) * (Math.PI / 180)
         temp.bolaVelocity.x = Math.cos(initial_ball_angle)
         temp.bolaVelocity.z = Math.sin(initial_ball_angle)
         temp.bola.position.x = 0
@@ -385,7 +383,7 @@ function balls() {
     }
     temp.bola.position.x += temp.bolaVelocity.x
     temp.bola.position.z += temp.bolaVelocity.z
-    
+
     //cek apakah bola nabrak tepi, kalau iya pantulkan
     if (temp.bola.position.z >= 25 || temp.bola.position.z <= -25) {
         temp.bolaVelocity.z *= -1
@@ -393,7 +391,7 @@ function balls() {
 
     //cek gol dan raket
     if (temp.bola.position.x >= 50) {
-        if (temp.bola.position.z >= temp.players[0].racket.position.z-10 && temp.bola.position.z <= temp.players[0].racket.position.z+10) {
+        if (temp.bola.position.z >= temp.players[0].racket.position.z - 10 && temp.bola.position.z <= temp.players[0].racket.position.z + 10) {
             temp.bolaVelocity.x *= -1.05
         }
         else {
@@ -402,7 +400,7 @@ function balls() {
         }
     }
     else if (temp.bola.position.x <= -50) {
-        if (temp.bola.position.z >= temp.players[1].racket.position.z-10 && temp.bola.position.z <= temp.players[1].racket.position.z+10) {
+        if (temp.bola.position.z >= temp.players[1].racket.position.z - 10 && temp.bola.position.z <= temp.players[1].racket.position.z + 10) {
             temp.bolaVelocity.x *= -1.05
         }
         else {
