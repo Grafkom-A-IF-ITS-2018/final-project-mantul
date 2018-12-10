@@ -15,10 +15,42 @@ function promisifyLoader(loader, onProgress) {
     }
 }
 
+var font
+function loadFont() {
+    let loader = new THREE.FontLoader()
+    loader.load('assets/fonts/helvetiker_bold.typeface.json', loaded => {
+        font = loaded
+    })
+}
+loadFont()
+
 function Player(id) {
     this.id = id
     this.score = 0
     this.racket = undefined
+    this.scoreMesh = undefined
+}
+
+Player.prototype.setScoreMesh = function (scene) {
+    let material = new THREE.MeshLambertMaterial({ color: 0xffffff })
+    let scoreStr = this.score.toString()
+
+    let textGeom = new THREE.TextGeometry(scoreStr, {
+        font: font,
+        size: 10,
+        height: 2,
+        bevelEnabled: false,
+    })
+    let scoreMesh = new THREE.Mesh(textGeom, material)
+    scoreMesh.position.x = this.id * 55
+    scoreMesh.position.y = 30
+    try {
+        scene.remove(this.scoreMesh)
+    } catch (error) {
+
+    }
+    this.scoreMesh = scoreMesh
+    scene.add(this.scoreMesh)
 }
 
 Player.prototype.createRaket = function (callback) {
@@ -50,6 +82,7 @@ Player.prototype.createRaket = function (callback) {
         })
     })
 }
+
 
 function GameWorld(id) {
     this.id = id
@@ -277,6 +310,7 @@ GameWorld.prototype.createPlayers = function () {
         player.createRaket((racket) => {
             this.scene.add(racket)
         })
+        player.setScoreMesh(this.scene)
         this.players.push(player)
     })
 }
@@ -375,22 +409,22 @@ function handle_racket() {
     }
 }
 
-function handle_env_status(){
+function handle_env_status() {
     if (pressed_key.change_env == true) {
-        if(env_status==1){
-            env_status=2
+        if (env_status == 1) {
+            env_status = 2
         }
-        else{
-            env_status=1
+        else {
+            env_status = 1
         }
         handle_env(env_status)
         pressed_key.change_env = false
     }
 }
 
-function handle_env(status){
+function handle_env(status) {
     let skyBoxMaterials2
-    if (status==1) {
+    if (status == 1) {
         skyBoxMaterials2 = [
             new THREE.MeshLambertMaterial({
                 map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/posx.jpg'), side: THREE.DoubleSide
@@ -466,6 +500,7 @@ function balls() {
         else {
             temp.restart = true
             temp.players[1].score += 1
+            temp.players[1].setScoreMesh(temp.scene)
         }
     }
     else if (temp.bola.position.x <= -50) {
@@ -475,6 +510,7 @@ function balls() {
         else {
             temp.restart = true
             temp.players[0].score += 1
+            temp.players[0].setScoreMesh(temp.scene)
         }
     }
 
