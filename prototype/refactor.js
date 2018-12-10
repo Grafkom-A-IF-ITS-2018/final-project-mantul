@@ -131,6 +131,13 @@ GameWorld.prototype.createLighting = function () {
     dirLight2.position.multiplyScalar(30)
     dirLight2.castShadow = true
     this.scene.add(dirLight2)
+
+    let dirLight3 = new THREE.DirectionalLight(0xffffff, 0.4)
+    dirLight3.color.setHSL(0.1, 1, 0.95)
+    dirLight3.position.set(0, 0, 1)
+    dirLight3.position.multiplyScalar(30)
+    dirLight3.castShadow = true
+    this.scene.add(dirLight3)
 }
 
 GameWorld.prototype.createSetMeja = function () {
