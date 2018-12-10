@@ -51,6 +51,10 @@ function handle_socket(socket) {
     console.log('connection refused')
   }
 
+  if (user.right != 0 && user.left != 0) {
+    io.emit('start', true)
+  }
+
   socket.on('disconnect', function() {
     user[userid] = 0
     console.log(userid + ' disconnect')

@@ -3,11 +3,16 @@
 const TABLE_SIZE = { w: 120, h: 8, d: 60 }
 const TABLE_LEG_POS = { x: 50, y: -15, z: 20 }
 
+var start = false
 var who_am_i = null
 var socket = io()
 socket.emit('who am i', 'ulol')
 socket.on('you are', function(data) {
     who_am_i = data
+})
+
+socket.on('start', function(data) {
+    start = true
 })
 
 function promisifyLoader(loader, onProgress) {
@@ -348,6 +353,8 @@ GameWorld.prototype.render = function () {
 
 var temp
 
+socket.on('')
+
 window.onload = function () {
     temp = new GameWorld(1)
     temp.initWorld()
@@ -368,13 +375,17 @@ var pressed_key = {
 }
 
 function handle_keydown(event) {
-    var key_code = event.which
-    socket.emit('keydown', key_code)
+    if (start == true) {
+        var key_code = event.which
+        socket.emit('keydown', key_code)
+    }
 }
 
 function handle_keyup(event) {
-    var key_code = event.which
-    socket.emit('keyup', key_code)
+    if (start == true) {
+        var key_code = event.which
+        socket.emit('keyup', key_code)
+    }
 }
 
 socket.on('keydown', function(data) {
@@ -434,6 +445,9 @@ function handle_racket() {
         temp.players[1].racket.position.z += speed
     }
 }
+
+document.addEventListener("keydown", handle_keydown, false);
+document.addEventListener("keyup", handle_keyup, false)
 
 var env_status = 1
 
@@ -500,50 +514,49 @@ function handle_env(status) {
     temp.skyBox.children[0].position.set(0, 120, 0)
 }
 
-document.addEventListener("keydown", handle_keydown, false);
-document.addEventListener("keyup", handle_keyup, false)
-
 function balls() {
-    if (who_am_i == 'right'){
-        if (temp.restart == true) {
-            var initial_ball_angle = (((Math.random()-0.5)*2)*360)*(Math.PI/180)
-            temp.bolaVelocity.x = Math.cos(initial_ball_angle)
-            temp.bolaVelocity.z = Math.sin(initial_ball_angle)
-            temp.bola.position.x = 0
-            temp.bola.position.z = 0
-            temp.restart = false
-        }
-        
-        //cek apakah bola nabrak tepi, kalau iya pantulkan
-        if (temp.bola.position.z >= 25 || temp.bola.position.z <= -25) {
-            temp.bolaVelocity.z *= -1
-        }
-
-        //cek gol dan raket
-        if (temp.bola.position.x >= 50) {
-            if (temp.bola.position.z >= temp.players[0].racket.position.z-10 && temp.bola.position.z <= temp.players[0].racket.position.z+10) {
-                temp.bolaVelocity.x *= -1.05
+    if (start == true) {
+        if (who_am_i == 'right'){
+            if (temp.restart == true) {
+                var initial_ball_angle = (((Math.random()-0.5)*2)*360)*(Math.PI/180)
+                temp.bolaVelocity.x = Math.cos(initial_ball_angle)
+                temp.bolaVelocity.z = Math.sin(initial_ball_angle)
+                temp.bola.position.x = 0
+                temp.bola.position.z = 0
+                temp.restart = false
             }
-            else {
-                temp.restart = true
-                socket.emit('score', 'left')
+            
+            //cek apakah bola nabrak tepi, kalau iya pantulkan
+            if (temp.bola.position.z >= 25 || temp.bola.position.z <= -25) {
+                temp.bolaVelocity.z *= -1
             }
-        }
-        else if (temp.bola.position.x <= -50) {
-            if (temp.bola.position.z >= temp.players[1].racket.position.z-10 && temp.bola.position.z <= temp.players[1].racket.position.z+10) {
-                temp.bolaVelocity.x *= -1.05
+    
+            //cek gol dan raket
+            if (temp.bola.position.x >= 50) {
+                if (temp.bola.position.z >= temp.players[0].racket.position.z-10 && temp.bola.position.z <= temp.players[0].racket.position.z+10) {
+                    temp.bolaVelocity.x *= -1.05
+                }
+                else {
+                    temp.restart = true
+                    socket.emit('score', 'left')
+                }
             }
-            else {
-                temp.restart = true
-                socket.emit('score', 'right')
-                
+            else if (temp.bola.position.x <= -50) {
+                if (temp.bola.position.z >= temp.players[1].racket.position.z-10 && temp.bola.position.z <= temp.players[1].racket.position.z+10) {
+                    temp.bolaVelocity.x *= -1.05
+                }
+                else {
+                    temp.restart = true
+                    socket.emit('score', 'right')
+                    
+                }
             }
+            data = {
+                'x': temp.bola.position.x + temp.bolaVelocity.x,
+                'z': temp.bola.position.z + temp.bolaVelocity.z
+            }
+            socket.emit('ball', data)
         }
-        data = {
-            'x': temp.bola.position.x + temp.bolaVelocity.x,
-            'z': temp.bola.position.z + temp.bolaVelocity.z
-        }
-        socket.emit('ball', data)
     }
 }
 
