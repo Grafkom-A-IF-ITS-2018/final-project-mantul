@@ -416,6 +416,9 @@ socket.on('keydown', function (data) {
         else if (key_code == 37) {
             pressed_key.player_0_down = true
         }
+        else if (key_code == 32) {
+            pressed_key.change_env = true
+        }
     }
     else if (player_id == 'left') {
         if (key_code == 37) {
@@ -423,6 +426,9 @@ socket.on('keydown', function (data) {
         }
         else if (key_code == 39) {
             pressed_key.player_1_down = true
+        }
+        else if (key_code == 32) {
+            pressed_key.change_env = true
         }
     }
 })
