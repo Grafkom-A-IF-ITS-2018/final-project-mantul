@@ -295,22 +295,22 @@ GameWorld.prototype.createReferee = function () {
 GameWorld.prototype.createSkyBox = function () {
     let skyBoxMaterials = [
         new THREE.MeshLambertMaterial({
-            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/posx.jpg'), side: THREE.DoubleSide
+            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament2/posx.jpg'), side: THREE.DoubleSide
         }),
         new THREE.MeshLambertMaterial({
-            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/negx.jpg'), side: THREE.DoubleSide
+            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament2/negx.jpg'), side: THREE.DoubleSide
         }),
         new THREE.MeshLambertMaterial({
-            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/posy.jpg'), side: THREE.DoubleSide
+            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament2/posy.jpg'), side: THREE.DoubleSide
         }),
         new THREE.MeshLambertMaterial({
-            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/negy.jpg'), side: THREE.DoubleSide
+            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament2/negy.jpg'), side: THREE.DoubleSide
         }),
         new THREE.MeshLambertMaterial({
-            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/posz.jpg'), side: THREE.DoubleSide
+            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament2/posz.jpg'), side: THREE.DoubleSide
         }),
         new THREE.MeshLambertMaterial({
-            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/negz.jpg'), side: THREE.DoubleSide
+            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament2/negz.jpg'), side: THREE.DoubleSide
         })
     ]
     let skyBoxMaterial = new THREE.Mesh(new THREE.BoxGeometry(300, 300, 300), skyBoxMaterials)
@@ -410,18 +410,18 @@ socket.on('keydown', function (data) {
     var player_id = data.player_side
     var key_code = data.key_code
     if (player_id == 'right') {
-        if (key_code == 38) {
+        if (key_code == 39) {
             pressed_key.player_0_up = true
         }
-        else if (key_code == 40) {
+        else if (key_code == 37) {
             pressed_key.player_0_down = true
         }
     }
     else if (player_id == 'left') {
-        if (key_code == 38) {
+        if (key_code == 37) {
             pressed_key.player_1_up = true
         }
-        else if (key_code == 40) {
+        else if (key_code == 39) {
             pressed_key.player_1_down = true
         }
     }
@@ -431,18 +431,18 @@ socket.on('keyup', function (data) {
     var player_id = data.player_side
     var key_code = data.key_code
     if (player_id == 'right') {
-        if (key_code == 38) {
+        if (key_code == 39) {
             pressed_key.player_0_up = false
         }
-        else if (key_code == 40) {
+        else if (key_code == 37) {
             pressed_key.player_0_down = false
         }
     }
     else if (player_id == 'left') {
-        if (key_code == 38) {
+        if (key_code == 37) {
             pressed_key.player_1_up = false
         }
-        else if (key_code == 40) {
+        else if (key_code == 39) {
             pressed_key.player_1_down = false
         }
     }
@@ -531,7 +531,8 @@ function handle_env(status) {
     temp.skyBox.children[0] = new THREE.Mesh(new THREE.BoxGeometry(300, 300, 300), skyBoxMaterials2)
     temp.skyBox.children[0].position.set(0, 120, 0)
 }
-
+var bounce = new Audio('assets/sound/Ping_Pong_Ball_Hit.mp3');
+var buzz = new Audio('assets/sound/buzz.mp3');
 function balls() {
     if (start == true) {
         if (who_am_i == 'right') {
@@ -553,8 +554,14 @@ function balls() {
             if (temp.bola.position.x >= 50) {
                 if (temp.bola.position.z >= temp.players[0].racket.position.z - 10 && temp.bola.position.z <= temp.players[0].racket.position.z + 10) {
                     temp.bolaVelocity.x *= -1.05
+                    bounce.pause();
+                    bounce.currentTime = 0;
+                    bounce.play();
                 }
                 else {
+                    buzz.pause();
+                    buzz.currentTime = 0;
+                    buzz.play();
                     temp.restart = true
                     socket.emit('score', 'left')
                 }
@@ -562,11 +569,16 @@ function balls() {
             else if (temp.bola.position.x <= -50) {
                 if (temp.bola.position.z >= temp.players[1].racket.position.z - 10 && temp.bola.position.z <= temp.players[1].racket.position.z + 10) {
                     temp.bolaVelocity.x *= -1.05
+                    bounce.pause();
+                    bounce.currentTime = 0;
+                    bounce.play();
                 }
                 else {
+                    buzz.pause();
+                    buzz.currentTime = 0;
+                    buzz.play();
                     temp.restart = true
                     socket.emit('score', 'right')
-
                 }
             }
             data = {
