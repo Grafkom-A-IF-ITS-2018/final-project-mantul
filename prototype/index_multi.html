@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href='https://fonts.googleapis.com/css?family=Black+Ops+One|Luckiest+Guy&effect=distressed-wood' 
-            rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Black+Ops+One|Luckiest+Guy&effect=distressed-wood' rel='stylesheet'
+        type='text/css'>
     <title>Muantul 3D - Prototype</title>
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="icon" href="assets/logo.png">
@@ -37,7 +37,7 @@
         }
 
         #load-text {
-            top: 70%;
+            /* top: 70%; */
             position: relative;
         }
     </style>
@@ -46,10 +46,12 @@
 <body>
     <div id="WebGL-output" style="display: none;">
     </div>
-    <img src="assets/icon.png">
+
     <div id="loading" style="width: 100%; height: 100%;">
+        <img src="assets/icon.png" style="height:70%">
         <div id="load-text">
-            <span class="font-effect-distressed-wood blink_me" style="font-size:50px; font-family:Luckiest Guy;">Waiting for another player...</span>
+            <span class="font-effect-distressed-wood blink_me" style="font-size:50px; font-family:Luckiest Guy;">Waiting
+                for another player...</span>
         </div>
     </div>
     <script src="refactor_multi.js"></script>
