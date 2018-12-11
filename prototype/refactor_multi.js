@@ -471,11 +471,11 @@ var env_status = 1
 
 function handle_env_status() {
     if (pressed_key.change_env == true) {
-        if (env_status == 1) {
-            env_status = 2
+        if (env_status == 3) {
+            env_status = 1
         }
         else {
-            env_status = 1
+            env_status += 1
         }
         handle_env(env_status)
         pressed_key.change_env = false
@@ -485,6 +485,28 @@ function handle_env_status() {
 function handle_env(status) {
     let skyBoxMaterials2
     if (status == 1) {
+        skyBoxMaterials2 = [
+            new THREE.MeshLambertMaterial({
+                map: new THREE.TextureLoader().load('assets/textures/cubemap2/posx.jpg'), side: THREE.DoubleSide
+            }),
+            new THREE.MeshLambertMaterial({
+                map: new THREE.TextureLoader().load('assets/textures/cubemap2/negx.jpg'), side: THREE.DoubleSide
+            }),
+            new THREE.MeshLambertMaterial({
+                map: new THREE.TextureLoader().load('assets/textures/cubemap2/posy.jpg'), side: THREE.DoubleSide
+            }),
+            new THREE.MeshLambertMaterial({
+                map: new THREE.TextureLoader().load('assets/textures/cubemap2/negy.jpg'), side: THREE.DoubleSide
+            }),
+            new THREE.MeshLambertMaterial({
+                map: new THREE.TextureLoader().load('assets/textures/cubemap2/posz.jpg'), side: THREE.DoubleSide
+            }),
+            new THREE.MeshLambertMaterial({
+                map: new THREE.TextureLoader().load('assets/textures/cubemap2/negz.jpg'), side: THREE.DoubleSide
+            })
+        ]
+    }
+    else if (status == 2) {
         skyBoxMaterials2 = [
             new THREE.MeshLambertMaterial({
                 map: new THREE.TextureLoader().load('assets/textures/cubemap1/posx.jpg'), side: THREE.DoubleSide
@@ -509,22 +531,22 @@ function handle_env(status) {
     else {
         skyBoxMaterials2 = [
             new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load('assets/textures/cubemap2/posx.jpg'), side: THREE.DoubleSide
+                map: new THREE.TextureLoader().load('assets/textures/cubemap3/posx.jpg'), side: THREE.DoubleSide
             }),
             new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load('assets/textures/cubemap2/negx.jpg'), side: THREE.DoubleSide
+                map: new THREE.TextureLoader().load('assets/textures/cubemap3/negx.jpg'), side: THREE.DoubleSide
             }),
             new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load('assets/textures/cubemap2/posy.jpg'), side: THREE.DoubleSide
+                map: new THREE.TextureLoader().load('assets/textures/cubemap3/posy.jpg'), side: THREE.DoubleSide
             }),
             new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load('assets/textures/cubemap2/negy.jpg'), side: THREE.DoubleSide
+                map: new THREE.TextureLoader().load('assets/textures/cubemap3/negy.jpg'), side: THREE.DoubleSide
             }),
             new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load('assets/textures/cubemap2/posz.jpg'), side: THREE.DoubleSide
+                map: new THREE.TextureLoader().load('assets/textures/cubemap3/posz.jpg'), side: THREE.DoubleSide
             }),
             new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load('assets/textures/cubemap2/negz.jpg'), side: THREE.DoubleSide
+                map: new THREE.TextureLoader().load('assets/textures/cubemap3/negz.jpg'), side: THREE.DoubleSide
             })
         ]
     }
