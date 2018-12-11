@@ -284,22 +284,22 @@ GameWorld.prototype.createReferee = function () {
 GameWorld.prototype.createSkyBox = function () {
     let skyBoxMaterials = [
         new THREE.MeshLambertMaterial({
-            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/posx.jpg'), side: THREE.DoubleSide
+            map: new THREE.TextureLoader().load('assets/textures/cubemap1/posx.jpg'), side: THREE.DoubleSide
         }),
         new THREE.MeshLambertMaterial({
-            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/negx.jpg'), side: THREE.DoubleSide
+            map: new THREE.TextureLoader().load('assets/textures/cubemap1/negx.jpg'), side: THREE.DoubleSide
         }),
         new THREE.MeshLambertMaterial({
-            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/posy.jpg'), side: THREE.DoubleSide
+            map: new THREE.TextureLoader().load('assets/textures/cubemap1/posy.jpg'), side: THREE.DoubleSide
         }),
         new THREE.MeshLambertMaterial({
-            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/negy.jpg'), side: THREE.DoubleSide
+            map: new THREE.TextureLoader().load('assets/textures/cubemap1/negy.jpg'), side: THREE.DoubleSide
         }),
         new THREE.MeshLambertMaterial({
-            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/posz.jpg'), side: THREE.DoubleSide
+            map: new THREE.TextureLoader().load('assets/textures/cubemap1/posz.jpg'), side: THREE.DoubleSide
         }),
         new THREE.MeshLambertMaterial({
-            map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/negz.jpg'), side: THREE.DoubleSide
+            map: new THREE.TextureLoader().load('assets/textures/cubemap1/negz.jpg'), side: THREE.DoubleSide
         })
     ]
     let skyBoxMaterial = new THREE.Mesh(new THREE.BoxGeometry(300, 300, 300), skyBoxMaterials)
@@ -432,66 +432,66 @@ function handle_env(status) {
     if (status == 1) {
         skyBoxMaterials2 = [
             new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/posx.jpg'), side: THREE.DoubleSide
+                map: new THREE.TextureLoader().load('assets/textures/cubemap1/posx.jpg'), side: THREE.DoubleSide
             }),
             new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/negx.jpg'), side: THREE.DoubleSide
+                map: new THREE.TextureLoader().load('assets/textures/cubemap1/negx.jpg'), side: THREE.DoubleSide
             }),
             new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/posy.jpg'), side: THREE.DoubleSide
+                map: new THREE.TextureLoader().load('assets/textures/cubemap1/posy.jpg'), side: THREE.DoubleSide
             }),
             new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/negy.jpg'), side: THREE.DoubleSide
+                map: new THREE.TextureLoader().load('assets/textures/cubemap1/negy.jpg'), side: THREE.DoubleSide
             }),
             new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/posz.jpg'), side: THREE.DoubleSide
+                map: new THREE.TextureLoader().load('assets/textures/cubemap1/posz.jpg'), side: THREE.DoubleSide
             }),
             new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament/negz.jpg'), side: THREE.DoubleSide
+                map: new THREE.TextureLoader().load('assets/textures/cubemap1/negz.jpg'), side: THREE.DoubleSide
             })
         ]
     }
     else if (status == 2) {
         skyBoxMaterials2 = [
             new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament2/posx.jpg'), side: THREE.DoubleSide
+                map: new THREE.TextureLoader().load('assets/textures/cubemap2/posx.jpg'), side: THREE.DoubleSide
             }),
             new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament2/negx.jpg'), side: THREE.DoubleSide
+                map: new THREE.TextureLoader().load('assets/textures/cubemap2/negx.jpg'), side: THREE.DoubleSide
             }),
             new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament2/posy.jpg'), side: THREE.DoubleSide
+                map: new THREE.TextureLoader().load('assets/textures/cubemap2/posy.jpg'), side: THREE.DoubleSide
             }),
             new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament2/negy.jpg'), side: THREE.DoubleSide
+                map: new THREE.TextureLoader().load('assets/textures/cubemap2/negy.jpg'), side: THREE.DoubleSide
             }),
             new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament2/posz.jpg'), side: THREE.DoubleSide
+                map: new THREE.TextureLoader().load('assets/textures/cubemap2/posz.jpg'), side: THREE.DoubleSide
             }),
             new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament2/negz.jpg'), side: THREE.DoubleSide
+                map: new THREE.TextureLoader().load('assets/textures/cubemap2/negz.jpg'), side: THREE.DoubleSide
             })
         ]
     }
     else {
         skyBoxMaterials2 = [
             new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament3/posx.jpg'), side: THREE.DoubleSide
+                map: new THREE.TextureLoader().load('assets/textures/cubemap3/posx.jpg'), side: THREE.DoubleSide
             }),
             new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament3/negx.jpg'), side: THREE.DoubleSide
+                map: new THREE.TextureLoader().load('assets/textures/cubemap3/negx.jpg'), side: THREE.DoubleSide
             }),
             new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament3/posy.jpg'), side: THREE.DoubleSide
+                map: new THREE.TextureLoader().load('assets/textures/cubemap3/posy.jpg'), side: THREE.DoubleSide
             }),
             new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament3/negy.jpg'), side: THREE.DoubleSide
+                map: new THREE.TextureLoader().load('assets/textures/cubemap3/negy.jpg'), side: THREE.DoubleSide
             }),
             new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament3/posz.jpg'), side: THREE.DoubleSide
+                map: new THREE.TextureLoader().load('assets/textures/cubemap3/posz.jpg'), side: THREE.DoubleSide
             }),
             new THREE.MeshLambertMaterial({
-                map: new THREE.TextureLoader().load('assets/textures/cubemap/parliament3/negz.jpg'), side: THREE.DoubleSide
+                map: new THREE.TextureLoader().load('assets/textures/cubemap3/negz.jpg'), side: THREE.DoubleSide
             })
         ]
     }
